@@ -3,7 +3,7 @@ plugins {
     id("com.gradle.plugin-publish") version "0.10.1"
 }
 
-version = "0.7.0"
+version = "0.8.0"
 description = "Plugin for automatically setting source/targetCompatibility of all modules in project to Java 8"
 
 repositories {
@@ -34,6 +34,11 @@ dependencies {
 
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.12")
+    // Use the Kotlin test library.
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+
+    // Use the Kotlin JUnit integration.
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 
 pluginBundle {
@@ -46,4 +51,22 @@ pluginBundle {
             tags = listOf("java8")
         }
     }
+}
+
+// Add a source set for the functional test suite
+val functionalTestSourceSet = sourceSets.create("functionalTest") {
+}
+
+gradlePlugin.testSourceSets(functionalTestSourceSet)
+configurations.getByName("functionalTestImplementation").extendsFrom(configurations.getByName("testImplementation"))
+
+// Add a task to run the functional tests
+val functionalTest by tasks.creating(Test::class) {
+    testClassesDirs = functionalTestSourceSet.output.classesDirs
+    classpath = functionalTestSourceSet.runtimeClasspath
+}
+
+val check by tasks.getting(Task::class) {
+    // Run the functional tests as part of `check`
+    dependsOn(functionalTest)
 }

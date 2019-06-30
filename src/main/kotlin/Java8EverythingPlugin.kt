@@ -24,15 +24,26 @@ class Java8EverythingPlugin : Plugin<Project> {
 
         // Setup all kotlin modules to use Java 8
         // avoid `configureEach` in preference of old way for compatibility with gradle < 4.9
-        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-            kotlinOptions.jvmTarget = JAVA_8
+        arrayOf("jvm", "android").forEach {
+            pluginManager.withPlugin("org.jetbrains.kotlin.$it") {
+                tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+                    kotlinOptions.jvmTarget = JAVA_8
+                }
+            }
         }
 
         // Setup all android modules to use Java 8
-        pluginManager.withPlugin("com.android.application") { java8android() }
-        pluginManager.withPlugin("com.android.library") { java8android() }
-        pluginManager.withPlugin("com.android.feature") { java8android() }
-        pluginManager.withPlugin("com.android.instantapp") { java8android() }
+        val androidPluginIds =
+                arrayOf(
+                        "application",
+                        "library",
+                        "feature",
+                        "instantapp"
+                )
+        androidPluginIds.forEach {
+            pluginManager.withPlugin("com.android.$it") { java8android() }
+
+        }
     }
 
     private fun Project.java8android() {
