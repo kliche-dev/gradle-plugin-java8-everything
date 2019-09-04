@@ -27,16 +27,23 @@ kotlinDslPluginOptions {
     experimentalWarning.set(false)
 }
 
+// THIS! This is what solved the test problems.
+tasks.withType<PluginUnderTestMetadata>().configureEach {
+    pluginClasspath.from(configurations.compileOnly)
+}
+
 
 dependencies {
     compileOnly("com.android.tools.build:gradle:3.3.0")
-    compileOnly(kotlin("gradle-plugin", "1.3.40"))
+    compileOnly(kotlin("gradle-plugin", "1.3.50"))
 
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.12")
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
+    testImplementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
@@ -53,20 +60,23 @@ pluginBundle {
     }
 }
 
-// Add a source set for the functional test suite
-val functionalTestSourceSet = sourceSets.create("functionalTest") {
+val test by tasks.getting(Test::class) {
+    useJUnitPlatform { }
 }
 
-gradlePlugin.testSourceSets(functionalTestSourceSet)
-configurations.getByName("functionalTestImplementation").extendsFrom(configurations.getByName("testImplementation"))
-
-// Add a task to run the functional tests
-val functionalTest by tasks.creating(Test::class) {
-    testClassesDirs = functionalTestSourceSet.output.classesDirs
-    classpath = functionalTestSourceSet.runtimeClasspath
-}
-
-val check by tasks.getting(Task::class) {
-    // Run the functional tests as part of `check`
-    dependsOn(functionalTest)
-}
+//// Add a source set for the functional test suite
+//val functionalTestSourceSet = sourceSets.create("functionalTest") {
+//}
+//
+//gradlePlugin.testSourceSets(functionalTestSourceSet)
+//
+//// Add a task to run the functional tests
+//val functionalTest by tasks.creating(Test::class) {
+//    testClassesDirs = functionalTestSourceSet.output.classesDirs
+//    classpath = functionalTestSourceSet.runtimeClasspath
+//}
+//
+//val check by tasks.getting(Task::class) {
+//    // Run the functional tests as part of `check`
+//    dependsOn(functionalTest)
+//}
