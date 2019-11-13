@@ -13,7 +13,7 @@ Just add the following to your root build.gradle file and you're done.
 
 ```gradle
 plugins {
-  id "kliche.java8-everything" version "0.7.0"
+  id "kliche.java8-everything" version "0.8.0"
 }
 ```
 
