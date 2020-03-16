@@ -4,7 +4,7 @@ plugins {
 
 }
 
-version = "0.9.0"
+version = "0.9.5"
 description = "Plugin for automatically setting source/targetCompatibility of all modules in project to Java 8"
 
 repositories {
