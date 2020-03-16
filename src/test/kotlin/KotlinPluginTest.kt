@@ -2,73 +2,55 @@ package dev.kliche.plugin.java8everything
 
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
-import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
+import org.gradle.api.tasks.TaskCollection
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+private const val KOTLIN_JVM_PLUGIN_ID = "org.jetbrains.kotlin.jvm"
+
+private infix fun TaskCollection<KotlinCompile>.shouldHaveVersion(version: String) {
+    this.forEach { task ->
+        task.kotlinOptions.jvmTarget shouldBe version
+    }
+}
 
 class KotlinPluginTest : WordSpec( {
 
-    "Using the Plugin ID" should {
+    "Applying plugin to kotlin project" should {
 
-        "Apply the plugin to kotlin project before" {
+        "applying kotlin plugin first" {
+            val project = projectBuilder()
 
-            val projectDir = createTempDir().apply { deleteOnExit() }
-            val buildGradle = projectDir.resolve("build.gradle")
-            buildGradle.writeText("""
-                plugins {
-                    id "kliche.java8-everything" 
-                    id "org.jetbrains.kotlin.jvm"
-                }
-                
-                task verifyTarget {
-                    doLast {
-                        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).forEach { t ->
-                            assert t.kotlinOptions.jvmTarget == "1.8"
-                        }
-                    }
-                }
-                
-            """.trimIndent())
+            project.pluginManager.apply(KOTLIN_JVM_PLUGIN_ID)
+            project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
 
-            val buildResult = GradleRunner.create()
-                    .withProjectDir(projectDir)
-                    .withPluginClasspath()
-                    .withArguments("verifyTarget")
-                    .build()
-
-
-            buildResult.task(":verifyTarget")!!.outcome shouldBe TaskOutcome.SUCCESS
+            project.tasksWithType<KotlinCompile>() shouldHaveVersion "1.8"
         }
 
-        "Apply the plugin to kotlin project after" {
+        "applying kotlin plugin last" {
+            val project = projectBuilder()
 
-            val projectDir = createTempDir().apply { deleteOnExit() }
-            val buildGradle = projectDir.resolve("build.gradle")
-            buildGradle.writeText("""
-                plugins {
-                    id "org.jetbrains.kotlin.jvm"
-                    id "kliche.java8-everything" 
+            project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
+            project.pluginManager.apply(KOTLIN_JVM_PLUGIN_ID)
+
+            project.tasksWithType<KotlinCompile>() shouldHaveVersion "1.8"
+        }
+
+        "applying kotlin plugin and then override" {
+            val project = projectBuilder()
+
+            project.pluginManager.apply(KOTLIN_JVM_PLUGIN_ID)
+            project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
+
+            project.tasks.withType(KotlinCompile::class.java) {
+                kotlinOptions {
+                    jvmTarget = "1.7"
                 }
-                
-                task verifyTarget {
-                    doLast {
-                        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).forEach { t ->
-                            assert t.kotlinOptions.jvmTarget == "1.8"
-                        }
-                    }
-                }
-                
-            """.trimIndent())
+            }
 
-            val buildResult = GradleRunner.create()
-                    .withProjectDir(projectDir)
-                    .withPluginClasspath()
-                    .withArguments("verifyTarget")
-                    .build()
-
-            buildResult.task(":verifyTarget")!!.outcome shouldBe TaskOutcome.SUCCESS
+            project.tasksWithType<KotlinCompile>() shouldHaveVersion "1.7"
         }
 
     }
 
 })
+

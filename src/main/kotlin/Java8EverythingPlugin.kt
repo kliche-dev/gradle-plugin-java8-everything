@@ -9,6 +9,7 @@ import org.gradle.kotlin.dsl.withType
 
 class Java8EverythingPlugin : Plugin<Project> {
     companion object {
+        const val PLUGIN_ID = "kliche.java8-everything"
         private const val JAVA_8 = "1.8"
     }
 

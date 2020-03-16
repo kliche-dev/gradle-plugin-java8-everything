@@ -2,16 +2,22 @@ package dev.kliche.plugin.java8everything
 
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldNotBe
-import org.gradle.testfixtures.ProjectBuilder
 
 class PluginTest : WordSpec( {
 
-    "Using the Plugin ID" should {
-        "Apply the plugin" {
-            val project = ProjectBuilder.builder().build()
-            project.pluginManager.apply("kliche.java8-everything")
+    "Apply the plugin" should {
+        "Using the plugin id" {
+            val project = projectBuilder()
+            project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
 
-            project.plugins.getPlugin(Java8EverythingPlugin::class.java) shouldNotBe null
+            project.getPlugin<Java8EverythingPlugin>() shouldNotBe null
+        }
+
+        "Using the class" {
+            val project = projectBuilder()
+            project.pluginManager.apply(JAVA8_EVERYTHING_PLUGIN)
+
+            project.getPlugin<Java8EverythingPlugin>() shouldNotBe null
         }
 
     }

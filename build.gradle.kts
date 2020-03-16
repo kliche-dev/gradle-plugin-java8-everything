@@ -43,13 +43,12 @@ dependencies {
     testImplementation("com.android.tools.build:gradle:$androidPluginVersion")
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.12")
-    // Use the Kotlin test library.
-//    testImplementation("org.jetbrains.kotlin:kotlin-test")
+
+    // Use the kotest test library.
     testImplementation("io.kotest:kotest-runner-junit5-jvm:4.0.0-BETA2") // for kotest framework
     testImplementation("io.kotest:kotest-assertions-core-jvm:4.0.0-BETA2") // for kotest core jvm assertions
 
 
-//    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testImplementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.70")
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
