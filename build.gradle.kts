@@ -1,14 +1,16 @@
 plugins {
     `kotlin-dsl`
     id("com.gradle.plugin-publish") version "0.10.1"
+
 }
 
-version = "0.8.0"
+version = "0.9.0"
 description = "Plugin for automatically setting source/targetCompatibility of all modules in project to Java 8"
 
 repositories {
     google()
     mavenCentral()
+    jcenter()
 }
 
 configure<GradlePluginDevelopmentExtension> {
@@ -17,7 +19,7 @@ configure<GradlePluginDevelopmentExtension> {
             id = "kliche.java8-everything"
             displayName = "Java 8 Everything Plugin"
             description = project.description
-            implementationClass = "com.github.liminal.kliche.plugin.java8everything.Java8EverythingPlugin"
+            implementationClass = "dev.kliche.plugin.java8everything.Java8EverythingPlugin"
         }
     }
 }
@@ -34,16 +36,21 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 
 
 dependencies {
-    compileOnly("com.android.tools.build:gradle:3.3.0")
-    compileOnly(kotlin("gradle-plugin", "1.3.50"))
+    val androidPluginVersion = "3.5.1"
+    compileOnly("com.android.tools.build:gradle:$androidPluginVersion")
+    compileOnly(kotlin("gradle-plugin", "1.3.70"))
 
+    testImplementation("com.android.tools.build:gradle:$androidPluginVersion")
     testImplementation(gradleTestKit())
     testImplementation("junit:junit:4.12")
     // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
+//    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:4.0.0-BETA2") // for kotest framework
+    testImplementation("io.kotest:kotest-assertions-core-jvm:4.0.0-BETA2") // for kotest core jvm assertions
 
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
-    testImplementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
+
+//    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
+    testImplementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.70")
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
