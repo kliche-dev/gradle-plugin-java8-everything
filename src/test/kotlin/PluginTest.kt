@@ -1,4 +1,4 @@
-package com.github.liminal.kliche.plugin.java8everything
+package dev.kliche.plugin.java8everything
 
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNot
