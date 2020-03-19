@@ -6,6 +6,7 @@ import org.gradle.api.tasks.TaskCollection
 import org.gradle.api.tasks.compile.JavaCompile
 
 private const val JAVA_PLUGIN_ID = "java"
+private const val JAVA_LIBRARY_PLUGIN_ID = "java-library"
 
 private infix fun TaskCollection<JavaCompile>.shouldHaveVersion(version: String) {
     this.forEach { task ->
@@ -16,7 +17,7 @@ private infix fun TaskCollection<JavaCompile>.shouldHaveVersion(version: String)
 
 class JavaPluginTest : WordSpec( {
 
-    "Using the Plugin ID" should {
+    "Using the java Plugin ID" should {
 
         "Apply the plugin to java project before" {
             val project = projectBuilder()
@@ -29,6 +30,26 @@ class JavaPluginTest : WordSpec( {
         "Apply the plugin to java project after" {
             val project = projectBuilder()
             project.pluginManager.apply(JAVA_PLUGIN_ID)
+            project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
+
+            project.tasksWithType<JavaCompile>() shouldHaveVersion "1.8"
+        }
+
+    }
+
+    "Using the java-library Plugin ID" should {
+
+        "Apply the plugin to java-library project before" {
+            val project = projectBuilder()
+            project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
+            project.pluginManager.apply(JAVA_LIBRARY_PLUGIN_ID)
+
+            project.tasksWithType<JavaCompile>() shouldHaveVersion "1.8"
+        }
+
+        "Apply the plugin to java-library project after" {
+            val project = projectBuilder()
+            project.pluginManager.apply(JAVA_LIBRARY_PLUGIN_ID)
             project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
 
             project.tasksWithType<JavaCompile>() shouldHaveVersion "1.8"

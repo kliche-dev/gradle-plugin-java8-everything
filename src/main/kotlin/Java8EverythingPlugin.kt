@@ -19,6 +19,7 @@ class Java8EverythingPlugin : Plugin<Project> {
     private fun Project.java8Everything() {
         // Setup all java modules to use Java 8
         pluginManager.withPlugin("java") {  java8javaCompileTasks() }
+        pluginManager.withPlugin("java-library") {  java8javaCompileTasks() }
 
         // Setup all kotlin modules to use Java 8
         pluginManager.withPlugin("org.jetbrains.kotlin.jvm") { java8kotlinCompileTasks() }
