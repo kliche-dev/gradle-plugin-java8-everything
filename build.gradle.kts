@@ -6,6 +6,7 @@ plugins {
 }
 
 version = "1.1"
+group = "dev.kliche.plugin.java_version_everything"
 description = "Plugin for automatically setting source/targetCompatibility of all modules in project"
 
 repositories {

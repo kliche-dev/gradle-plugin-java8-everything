@@ -1,9 +1,7 @@
 package dev.kliche.plugin.java_version_everything
 
-import com.android.build.api.dsl.DynamicFeatureExtension
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.FeatureExtension
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.JavaVersion
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 private const val ANDROID_APPLICATION_PLUGIN_ID = "com.android.application"
-private const val ANDROID_FEATURE_PLUGIN_ID = "com.android.feature"
 private const val ANDROID_LIBRARY_PLUGIN_ID = "com.android.library"
 
 private infix fun <T : BaseExtension> T.shouldHaveVersion(version: JavaVersion) {
