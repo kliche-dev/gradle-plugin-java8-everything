@@ -1,2 +1,2 @@
-rootProject.name = "java8-everything"
+rootProject.name = "java-version-everything-plugin"
 

@@ -1,25 +1,30 @@
-package dev.kliche.plugin.java8everything
+package dev.kliche.plugin.java_version_everything
 
-import io.kotest.core.spec.style.WordSpec
-import io.kotest.matchers.shouldBe
 import org.gradle.api.tasks.TaskCollection
 import org.gradle.api.tasks.compile.JavaCompile
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
 private const val JAVA_PLUGIN_ID = "java"
 private const val JAVA_LIBRARY_PLUGIN_ID = "java-library"
 
 private infix fun TaskCollection<JavaCompile>.shouldHaveVersion(version: String) {
     this.forEach { task ->
-        task.sourceCompatibility shouldBe version
-        task.targetCompatibility shouldBe version
+        assertEquals(task.sourceCompatibility ,version)
+        assertEquals(task.targetCompatibility ,version)
     }
 }
 
-class JavaPluginTest : WordSpec( {
+class JavaPluginTest  {
 
-    "Using the java Plugin ID" should {
+    @Nested
+    @DisplayName("Using the java plugin ID")
+    inner class Using_the_java_Plugin_ID {
 
-        "Apply the plugin to java project before" {
+        @Test
+        fun `Apply the plugin to java project before`() {
             val project = projectBuilder()
             project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
             project.pluginManager.apply(JAVA_PLUGIN_ID)
@@ -27,19 +32,22 @@ class JavaPluginTest : WordSpec( {
             project.tasksWithType<JavaCompile>() shouldHaveVersion "1.8"
         }
 
-        "Apply the plugin to java project after" {
+        @Test
+        fun `Apply the plugin to java project after`() {
             val project = projectBuilder()
             project.pluginManager.apply(JAVA_PLUGIN_ID)
             project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
 
             project.tasksWithType<JavaCompile>() shouldHaveVersion "1.8"
         }
-
     }
 
-    "Using the java-library Plugin ID" should {
+    @Nested
+    @DisplayName("Using the java-library Plugin ID")
+    inner class Using_the_java_library_Plugin_ID {
 
-        "Apply the plugin to java-library project before" {
+        @Test
+        fun `Apply the plugin to java-library project before`() {
             val project = projectBuilder()
             project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
             project.pluginManager.apply(JAVA_LIBRARY_PLUGIN_ID)
@@ -47,7 +55,8 @@ class JavaPluginTest : WordSpec( {
             project.tasksWithType<JavaCompile>() shouldHaveVersion "1.8"
         }
 
-        "Apply the plugin to java-library project after" {
+        @Test
+        fun `Apply the plugin to java-library project after`() {
             val project = projectBuilder()
             project.pluginManager.apply(JAVA_LIBRARY_PLUGIN_ID)
             project.pluginManager.apply(Java8EverythingPlugin.PLUGIN_ID)
@@ -56,7 +65,4 @@ class JavaPluginTest : WordSpec( {
         }
 
     }
-
-
-
-})
+}
